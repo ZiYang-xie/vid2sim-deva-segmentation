@@ -6,20 +6,20 @@ def add_ext_eval_args(parser: ArgumentParser):
 
     # Grounded Segment Anything
     parser.add_argument('--GROUNDING_DINO_CONFIG_PATH',
-                        default='./saves/GroundingDINO_SwinT_OGC.py')
+                        default='../ckpts/deva/GroundingDINO_SwinT_OGC.py')
 
     parser.add_argument('--GROUNDING_DINO_CHECKPOINT_PATH',
-                        default='./saves/groundingdino_swint_ogc.pth')
+                        default='../ckpts/deva/groundingdino_swint_ogc.pth')
 
     parser.add_argument('--DINO_THRESHOLD', default=0.35, type=float)
     parser.add_argument('--DINO_NMS_THRESHOLD', default=0.7, type=float)
 
     # Segment Anything (SAM) models
     parser.add_argument('--SAM_ENCODER_VERSION', default='vit_h')
-    parser.add_argument('--SAM_CHECKPOINT_PATH', default='./saves/sam_hq_vit_h.pth')
+    parser.add_argument('--SAM_CHECKPOINT_PATH', default='../ckpts/deva/sam_hq_vit_h.pth')
 
     # Mobile SAM
-    parser.add_argument('--MOBILE_SAM_CHECKPOINT_PATH', default='./saves/mobile_sam.pt')
+    parser.add_argument('--MOBILE_SAM_CHECKPOINT_PATH', default='../ckpts/deva/mobile_sam.pt')
 
     # Segment Anything (SAM) parameters
     parser.add_argument('--SAM_NUM_POINTS_PER_SIDE',

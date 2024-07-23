@@ -3,6 +3,7 @@ import torch
 import torch.nn.functional as F
 import torchvision
 import os
+import cv2
 from os import path
 from PIL import Image, ImagePalette
 import pycocotools.mask as mask_util
@@ -69,6 +70,11 @@ class ResultSaver:
             self.visualize = True
             self.visualize_postfix = 'Visualizations'
             self.output_postfix = 'masks'
+        elif self.dataset == 'mask':
+            self.need_remapping = True
+            self.output_postfix = 'masks'
+            self.dialate = True
+
         elif self.dataset == 'gradio':
             # minimal mode, expect a cv2.VideoWriter to be assigned to self.writer asap
             self.writer = None
@@ -229,7 +235,18 @@ def save_result(queue: Queue):
                     this_out_path = path.join(this_out_path, saver.video_name)
 
                 os.makedirs(this_out_path, exist_ok=True)
-                out_img.save(path.join(this_out_path, frame_name[:-4] + '.png'))
+                out_img = np.array(out_img)
+                mask = out_img.sum(-1)!=0
+
+                if saver.dialate:
+                    # Dialate mask
+                    mask = mask.astype('uint8')
+                    kernel = np.ones((5,5),np.uint8)
+                    mask = cv2.dilate(mask, kernel, iterations=1)
+                    mask = (1-mask.astype('uint8')) * 255
+                    mask = Image.fromarray(mask)
+
+                mask.save(path.join(this_out_path, frame_name[:-4] + '.png'))
 
             if saver.visualize and saver.object_manager.use_long_id:
                 if image_np is None:

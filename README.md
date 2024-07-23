@@ -1,7 +1,8 @@
 # deva-segmentation
 
 Used as the tracking segmentation engine for the paper "" (Arxiv 2024). 
-Learn more at [GSim]().
+Learn more at [GSim]().  
+
 | [Webpage](https://langsplat.github.io/) | [Full Paper](https://arxiv.org/pdf/2312.16084.pdf) | [Video](https://www.youtube.com/watch?v=XMlyjsei-Es) |
 
 This repo is based on [DEVA: Tracking Anything with Decoupled Video Segmentation](https://github.com/hkchengrex/Tracking-Anything-with-DEVA)

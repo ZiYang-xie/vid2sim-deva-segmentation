@@ -142,6 +142,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-*.sh
 output/
 saves/

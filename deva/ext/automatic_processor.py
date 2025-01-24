@@ -14,7 +14,7 @@ from deva.inference.demo_utils import get_input_frame_for_deva
 from deva.ext.automatic_sam import auto_segment
 from deva.utils.tensor_utils import pad_divide_by, unpad
 
-from segment_anything import SamAutomaticMaskGenerator
+from segment_anything_hq import SamAutomaticMaskGenerator
 
 
 def make_segmentation(cfg: Dict, image_np: np.ndarray, forward_mask: Optional[torch.Tensor],
@@ -71,6 +71,7 @@ def process_frame_automatic(deva: DEVAInferenceCore,
                             result_saver: ResultSaver,
                             ti: int,
                             save_path: str,
+                            save_the_mask: bool = True,
                             image_np: np.ndarray = None) -> None:
     # image_np, if given, should be in RGB
     if image_np is None:
@@ -123,6 +124,7 @@ def process_frame_automatic(deva: DEVAInferenceCore,
                 result_saver.save_mask(prob,
                                        this_frame_name,
                                        need_resize=need_resize,
+                                       save_the_mask=save_the_mask,
                                        shape=(h, w),
                                        image_np=this_image_np)
                 save_maps(prob, image_np, clip_model, int(this_frame_name.split('.')[0]), save_path)
@@ -135,6 +137,7 @@ def process_frame_automatic(deva: DEVAInferenceCore,
                     result_saver.save_mask(prob,
                                            this_frame_name,
                                            need_resize,
+                                           save_the_mask=save_the_mask,
                                            shape=(h, w),
                                            image_np=this_image_np)
                     save_maps(prob, image_np, clip_model, int(this_frame_name.split('.')[0]), save_path)
@@ -146,6 +149,7 @@ def process_frame_automatic(deva: DEVAInferenceCore,
             result_saver.save_mask(prob,
                                    frame_name,
                                    need_resize=need_resize,
+                                   save_the_mask=save_the_mask,
                                    shape=(h, w),
                                    image_np=image_np)
             save_maps(prob, image_np, clip_model, int(frame_name.split('.')[0]), save_path)
@@ -170,6 +174,7 @@ def process_frame_automatic(deva: DEVAInferenceCore,
         result_saver.save_mask(prob,
                                frame_name,
                                need_resize=need_resize,
+                               save_the_mask=save_the_mask,
                                shape=(h, w),
                                image_np=image_np)
 
@@ -191,8 +196,8 @@ def save_maps(prob, image_np, clip_model, ti, save_path):
     assert seg_mask.max() == clip_embed.shape[0]
 
     seg_mask = (seg_mask-1)[None,...]
-    np.save(save_path + f"/frame_{(ti+1):05d}_s.npy", seg_mask.cpu().numpy())
-    np.save(save_path + f"/frame_{(ti+1):05d}_f.npy", clip_embed.cpu().numpy())
+    np.save(save_path + f"/frame_{(ti):05d}_s.npy", seg_mask.cpu().numpy())
+    np.save(save_path + f"/frame_{(ti):05d}_f.npy", clip_embed.cpu().numpy())
 
 def estimate_forward_mask(deva: DEVAInferenceCore, image: torch.Tensor):
     image, pad = pad_divide_by(image, 16)
